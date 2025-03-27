@@ -26,12 +26,23 @@ end input_parser;
 
 architecture a of input_parser is
 	--address 0x20
-	signal startBr		: std_logic_vector(5 downto 0); -- start brightness (the min)
-	signal bitmask    : std_logic_vector(9 downto 0); -- which LEDs are being set (others go off), last 10 bits
+	
 
 begin
 	
+	process(cs0, resetn)
+	begin
+		if resetn = '1' then
+			brightnesses <= (others => "000000");
+		elsif cs0 = '1' and write_en = '1' then
+			for i in 0 to 9 loop
+				if (io_data(15 - i) = '1') then
+					brightnesses(i) <= io_data(15 downto 10);
+				end if;
+			end loop;
+		end if;
+	end process;
 	
-	brightnesses <= (others => "000000");
+	
 end a;
 
