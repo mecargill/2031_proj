@@ -32,16 +32,18 @@ begin
 	
 	process(cs0, resetn)
 	begin
-		if resetn = '1' then
+		if resetn = '0' then
 			brightnesses <= (others => "000000");
 		elsif cs0 = '1' and write_en = '1' then
 			for i in 0 to 9 loop
-				if (io_data(15 - i) = '1') then
+				if (io_data(i) = '1') then
 					brightnesses(i) <= io_data(15 downto 10);
 				end if;
 			end loop;
 		end if;
 	end process;
+	
+	
 	
 	
 end a;
