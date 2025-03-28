@@ -26,26 +26,52 @@ architecture a of ledcontroller is
 	
 	component input_parser
 		port(
-      cs0           : in  std_logic; --this io address tells brightness and a bit mask
-	   cs1			  : in  std_logic; --this io address tells the pattern/fn and params 
-	   cs2		     : in  std_logic;
-      write_en      : in  std_logic;
-      resetn        : in  std_logic;
-      clk12MHz      : in  std_logic;
-	   io_data       : in  std_logic_vector(15 downto 0);
-	 
-      brightnesses  : out brightness_array--10 brightnesses
+			cs0         : in  std_logic; --this io address tells brightness and a bit mask
+			cs1			 : in  std_logic; --this io address tells the pattern/fn and params 
+			cs2			 : in  std_logic;
+			write_en    : in  std_logic;
+			resetn      : in  std_logic;
+			clk12MHz    : in  std_logic;
+			io_data     : in  std_logic_vector(15 downto 0);
+
+			sup_count   : out std_logic_vector(5 downto 0); --a subcycle is 5.3 us. 64 samples stored so 2^6?
+			startBr     : out std_logic_vector(5 downto 0);
+			span        : out std_logic_vector(5 downto 0);
+			pd          : out std_logic_vector(9 downto 0); -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
+			func        : out func_type;
       );
+	end component;
+	
+	component func_gen
+		port(
+			sup_count    : in std_logic_vector(5 downto 0);
+			startBr      : in std_logic_vector(5 downto 0);
+			span         : in std_logic_vector(5 downto 0);
+			pd           : in std_logic_vector(9 downto 0); 
+			clk12MHz     : in std_logic;
+			func         : in func_type;
+
+			brightnesses : out brightness_array;
+		);
 	end component;
 
 	component pulse_gen
 		port(
-	   brightnesses     : in brightness_array;
-		clk12MHz         : in std_logic;
-	 
-      leds             : out std_logic_vector(9 downto 0)--determined by brightness bits
-      );
+			brightnesses    : in  brightness_array;
+			clk12MHz        : in  std_logic;
+			resetn          : in  std_logic;
+
+			leds            : out std_logic_vector(9 downto 0)
+		);
 	end component;
+	--intermediary signals.. are these necessary? I think so but not sure
+
+	signal sup_count      : std_logic_vector(5 downto 0);
+	signal startBr        : std_logic_vector(5 downto 0);
+	signal span           : std_logic_vector(5 downto 0);
+	signal pd             : std_logic_vector(9 downto 0);
+	signal func           : func_type;
+	
 	
 	signal brightnesses : brightness_array;
 
@@ -59,13 +85,31 @@ begin
 			resetn => resetn,
 			clk12MHz => clk12MHz,
 			io_data => io_data,
+
+			sup_count => sup_count,
+			startBr => startBr,
+			span => span,
+			pd => pd,
+			func => func
+		);
+		
+	comp2: func_gen
+		port map(
+			sup_count => sup_count,
+			startBr => startBr,
+			span => span,
+			pd => pd,
+			clk12MHz => clk12MHz,
+			func => func,
+	
 			brightnesses => brightnesses
 		);
 		
-	comp2: pulse_gen
+	comp3: pulse_gen
 		port map(
 			brightnesses => brightnesses,
 			clk12MHz => clk12MHz,
+			resetn => resetn,
 			leds => leds
 		);
 

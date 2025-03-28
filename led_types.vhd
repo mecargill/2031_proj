@@ -7,4 +7,5 @@ use ieee.std_logic_unsigned.all;
 
 package led_types is
 	type brightness_array is array(9 downto 0) of std_logic_vector(5 downto 0);
+	type func_type is (linear, square, sine, sawtooth);
 end package;

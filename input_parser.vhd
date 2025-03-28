@@ -8,19 +8,24 @@ use lpm.lpm_components.all;
 
 use work.led_types.all;
 
+--This device handles getting input from scomp
 entity input_parser is
 		
-port(
-    cs0         : in  std_logic; --this io address tells brightness and a bit mask
-	 cs1			 : in  std_logic; --this io address tells the pattern/fn and params 
-	 cs2			 : in  std_logic;
-    write_en    : in  std_logic;
-    resetn      : in  std_logic;
-    clk12MHz    : in  std_logic;
-	 io_data     : in  std_logic_vector(15 downto 0);
-	 
-    brightnesses  : out brightness_array--10 brightnesses
-    );
+	port(
+		 cs0         : in  std_logic; --this io address tells brightness and a bit mask
+		 cs1			 : in  std_logic; --this io address tells the pattern/fn and params 
+		 cs2			 : in  std_logic;
+		 write_en    : in  std_logic;
+		 resetn      : in  std_logic;
+		 clk12MHz    : in  std_logic;
+		 io_data     : in  std_logic_vector(15 downto 0);
+		 
+		 sup_count   : out std_logic_vector(5 downto 0); --a subcycle is 5.3 us. 64 samples stored so 2^6?
+		 startBr     : out std_logic_vector(5 downto 0); --start brightness
+		 span        : out std_logic_vector(5 downto 0);
+		 pd          : out std_logic_vector(9 downto 0); -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
+		 func        : out func_type;
+		 );
 end input_parser;
 
 
