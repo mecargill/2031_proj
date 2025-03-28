@@ -35,21 +35,21 @@ architecture a of ledcontroller is
 			io_data     : in  std_logic_vector(15 downto 0);
 
 			sup_count   : out std_logic_vector(5 downto 0); --a subcycle is 5.3 us. 64 samples stored so 2^6?
-			startBr     : out std_logic_vector(5 downto 0);
-			span        : out std_logic_vector(5 downto 0);
-			pd          : out std_logic_vector(9 downto 0); -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
-			func        : out func_type;
+			startBrs     : out brightness_array;
+			spans        : out brightness_array;
+			pds          : out time_array; -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
+			funcs        : out func_array;
       );
 	end component;
 	
 	component func_gen
 		port(
 			sup_count    : in std_logic_vector(5 downto 0);
-			startBr      : in std_logic_vector(5 downto 0);
-			span         : in std_logic_vector(5 downto 0);
-			pd           : in std_logic_vector(9 downto 0); 
+			startBrs      : in brightness_array;
+			spans         : in brightness_array;
+			pds          : in time_array; 
 			clk12MHz     : in std_logic;
-			func         : in func_type;
+			funcs         : in func_array;
 
 			brightnesses : out brightness_array;
 		);
@@ -67,10 +67,10 @@ architecture a of ledcontroller is
 	--intermediary signals.. are these necessary? I think so but not sure
 
 	signal sup_count      : std_logic_vector(5 downto 0);
-	signal startBr        : std_logic_vector(5 downto 0);
-	signal span           : std_logic_vector(5 downto 0);
-	signal pd             : std_logic_vector(9 downto 0);
-	signal func           : func_type;
+	signal startBrs        : brightness_array;
+	signal spans           : brightness_array;
+	signal pds             : time_array;
+	signal funcs           : func_array;
 	
 	
 	signal brightnesses : brightness_array;
@@ -87,20 +87,20 @@ begin
 			io_data => io_data,
 
 			sup_count => sup_count,
-			startBr => startBr,
-			span => span,
-			pd => pd,
-			func => func
+			startBrs => startBrs,
+			spans => spans,
+			pds => pds,
+			funcs => funcs
 		);
 		
 	comp2: func_gen
 		port map(
 			sup_count => sup_count,
-			startBr => startBr,
-			span => span,
-			pd => pd,
+			startBrs => startBrs,
+			spans => spans,
+			pds => pds,
 			clk12MHz => clk12MHz,
-			func => func,
+			funcs => funcs,
 	
 			brightnesses => brightnesses
 		);

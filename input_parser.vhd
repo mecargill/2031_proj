@@ -21,10 +21,10 @@ entity input_parser is
 		 io_data     : in  std_logic_vector(15 downto 0);
 		 
 		 sup_count   : out std_logic_vector(5 downto 0); --a subcycle is 5.3 us. 64 samples stored so 2^6?
-		 startBr     : out std_logic_vector(5 downto 0); --start brightness
-		 span        : out std_logic_vector(5 downto 0);
-		 pd          : out std_logic_vector(9 downto 0); -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
-		 func        : out func_type;
+		 startBrs     : out brightness_array; --start brightness
+		 spans        : out brightness_array; --span is the brightness span
+		 pds          : out time_array; -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
+		 funcs        : out func_array;
 		 );
 end input_parser;
 
@@ -42,9 +42,23 @@ begin
 		elsif cs0 = '1' and write_en = '1' then
 			for i in 0 to 9 loop
 				if (io_data(i) = '1') then
-					brightnesses(i) <= io_data(15 downto 10);
+					startBr(i) <= io_data(15 downto 10);
 				end if;
 			end loop;
+		elsif cs1 = '1' and write_en = '1' then
+			--grab func
+			case io_data(15 downto 14) is
+				when "00" =>
+					func <= linear;
+				when "01" =>
+					func <= square;
+				when others =>
+					func <= square; --in the future, we can add more here
+			end case;
+			--grab span
+			
+			--grab pd
+			
 		end if;
 	end process;
 	

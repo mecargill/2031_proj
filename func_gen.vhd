@@ -12,11 +12,11 @@ entity func_gen is
 	
 	port(	 
 		sup_count    : in std_logic_vector(5 downto 0);
-		startBr      : in std_logic_vector(5 downto 0);
-		span         : in std_logic_vector(5 downto 0);
-		pd           : in std_logic_vector(9 downto 0);
+		startBrs      : in brightness_array;
+		spans         : in brightness_array;
+		pds           : in time_array;
 		clk12MHz     : in std_logic;
-		func         : in func_type;
+		funcs         : in func_array;
 		
 		brightnesses : out brightness_array;
 		
