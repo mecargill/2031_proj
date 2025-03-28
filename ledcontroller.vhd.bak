@@ -1,0 +1,83 @@
+library ieee;
+library lpm;
+
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+use lpm.lpm_components.all;
+
+entity ledcontroller is
+port(
+    cs0         : in  std_logic; --this io address tells brightness and a bit mask
+	 cs1			 : in  std_logic; --this io address tells the pattern/fn and params 
+	 cs2			 : in  std_logic;
+    write_en    : in  std_logic;
+    resetn      : in  std_logic;
+    clk12MHz    : in  std_logic;
+    leds        : out std_logic_vector(9 downto 0);
+    io_data     : in  std_logic_vector(15 downto 0)
+    );
+end ledcontroller;
+
+
+architecture a of ledcontroller is
+	type funcType = (const, square); --can add more options later
+	--address 0x20
+	signal startBr		: std_logic_vector(5 downto 0); -- start brightness (the min)
+	signal bitmask    : std_logic_vector(9 downto 0); -- which LEDs are being set (others go off), last 10 bits
+	--address 0x21
+	signal func			: funcType;
+	signal endBr		: std_logic_vector(5 downto 0) -- 
+	signal pd			: std_logic_vector(7 downto 0) -- this can be used as time or pd depending on fn
+	--internal use	
+	signal count      : std_logic_vector(5 downto 0); -- internal, same as brightness length
+begin
+	--this process basically does everything
+	process(clk12MHz, cs0, cs1, resetn)
+	begin
+		--Must put combinational before sequential so it can separate them
+		--Due to the fact that the first 2 are combinational, the leds will change with 
+		--io_data when cond is met, not on any edges
+		if resetn = '0' then 
+			leds       <= "0000000000";
+			count      <= "000000";
+			startBr    <= "000000";
+			func       <= const;
+			
+		--here we load in the users values... io_data must be valid when cs is de asserted!
+		elsif cs0 = '1' and write_en = '1' then
+			startBr    <= io_data(15 downto 10);
+			bitmask    <= io_data(9 downto 0);
+			leds       <= io_data(9 downto 0);
+			count      <= "000000";
+		elsif cs1 = '1' and write_en = '1' then
+			with io_data(15 downto 14) select func <=
+				const  when "00",
+				square when others;
+			endBr      <= io_data(13 downto 8);
+			pd 		  <= io_data(7 downto 0);
+			
+		--here we handle the animation	
+		elsif rising_edge(clk12MHz) then
+		
+				if func = const then
+						--handles constant brightness - order of ifs is important for 0 and max brightness inputs
+						if count = "111111" then
+							count <= "000000";
+						elsif count = startBr then
+							leds <= "0000000000";
+							count <= count + 1;
+						elsif count = "000000" then
+							leds <= bitmask;
+							count <= count + 1;
+						else
+							count <= count + 1;
+						end if;
+				elsif func = square then
+					--need to implement
+				end if;
+		end if;
+	end process;
+
+end a;
+
