@@ -7,36 +7,40 @@ use ieee.std_logic_unsigned.all; --overloads operations for std_logic types
 use lpm.lpm_components.all;
 use work.led_types.all;
 
+--This device takes in a brightness array (2d) and takes care of LED control, no gamma correction yet
 entity pulse_gen is
 	
-port(
-	 brightnesses    : in  brightness_array;
-	 clk12MHz        : in  std_logic;
-	 
-    leds            : out std_logic_vector(9 downto 0)
-    );
+	port(
+		 brightnesses    : in  brightness_array;
+		 clk12MHz        : in  std_logic;
+		 resetn          : in  std_logic;
+		 
+		 clk_count       : out std_logic_vector(5 downto 0);
+		 
+		 leds            : out std_logic_vector(9 downto 0)
+		 );
 end pulse_gen;
 
-
+--it seems like maybe the clock stops on reset because leds just hold value on reset
 architecture a of pulse_gen is
-	signal count : std_logic_vector(5 downto 0);
+	signal count  : std_logic_vector(5 downto 0);
 begin
-	process(clk12MHz)
+	process(clk12MHz, resetn)
 	
 	begin
-		if rising_edge(clk12MHz) then
+		if resetn = '0' then
+			leds <= (others => '0');
+		elsif rising_edge(clk12MHz) then
 			for i in 0 to 9 loop
-				if count = "111111" then
-					--pass
-				elsif count = brightnesses(i) then
-					leds(i) <= '0';
-				elsif count = "000000" then
+				if count < brightnesses(i) then
 					leds(i) <= '1';
+				else
+					leds(i) <= '0';
 				end if;
 			end loop;
 			count <= count + 1;		
 		end if;
 		
 	end process;
-
+	clk_count <= count;
 end a;
