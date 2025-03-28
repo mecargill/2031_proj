@@ -25,34 +25,46 @@ entity input_parser is
 		 spans        : out brightness_array; --span is the brightness span
 		 pds          : out time_array; -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
 		 funcs        : out func_array
+		 
 		 );
 end input_parser;
 
 
 architecture a of input_parser is
-	signal curr_end_or_max_bri : std_logic_vector(5 downto 0);
+
 	signal curr_span    : std_logic_vector(5 downto 0);
 	signal curr_pd      : std_logic_vector(7 downto 0);
 	signal curr_func    : func_type;
 	
 	signal sub_count    : std_logic_vector(2 downto 0);
+	
 
 begin
 	
 	process(cs0, resetn) --this process takes 0x20 address commands. These commands latch through the current func that is set by the 0x21 cmd
 	begin
+	
+			
+		
 		if resetn = '0' then
+			
 			--setting to step and end bri 0 should make them off, then behave like original peripheral on reset (at 0x20)
 			end_or_max_bris <= (others => "000000");
 			funcs <= (others => step);
+			
 		elsif rising_edge(cs0) and write_en = '1' then
+			
 			--update with the data in current 0x20 cmd, and last 0x21 cmd data, updating on a 0x20 cmd edge
+			--end_or_max_bris <= (others => "111111");
+			
 			for i in 0 to 9 loop
-				if (io_data(i) = '1') then
+			
+				if (io_data(i) = '1') then 
 					end_or_max_bris(i) <= io_data(15 downto 10);
 					spans(i) <= curr_span;
 					pds(i) <= curr_pd;
 					funcs(i) <= curr_func;
+					
 				end if;
 			end loop;
 		

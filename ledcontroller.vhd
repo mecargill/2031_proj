@@ -39,6 +39,7 @@ architecture a of ledcontroller is
 			spans        : out brightness_array;
 			pds          : out time_array; -- 64 samples is probably good for like 10 to 20 seconds, this goes to 1024 so we can go up to 10s if we want to keep 0.01s res
 			funcs        : out func_array
+			
       );
 	end component;
 	
@@ -95,7 +96,7 @@ begin
 			end_or_max_bris => end_or_max_bris,
 			spans => spans,
 			pds => pds,
-			funcs => funcs
+			funcs => funcs		
 		);
 		
 	comp2: func_gen

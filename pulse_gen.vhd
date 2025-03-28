@@ -23,6 +23,7 @@ end pulse_gen;
 
 --it seems like maybe the clock stops on reset because leds just hold value on reset
 architecture a of pulse_gen is
+	signal count  : std_logic_vector(5 downto 0);
 begin
 	process(clk12MHz, resetn)
 	
@@ -31,17 +32,15 @@ begin
 			leds <= (others => '0');
 		elsif rising_edge(clk12MHz) then
 			for i in 0 to 9 loop
-				if clk_count = "111111" then
-					--pass
-				elsif clk_count = brightnesses(i) then
-					leds(i) <= '0';
-				elsif clk_count = "000000" then
+				if count < brightnesses(i) then
 					leds(i) <= '1';
+				else
+					leds(i) <= '0';
 				end if;
 			end loop;
-			clk_count <= clk_count + 1;		
+			count <= count + 1;		
 		end if;
 		
 	end process;
-
+	clk_count <= count;
 end a;

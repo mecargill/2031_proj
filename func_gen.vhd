@@ -50,7 +50,7 @@ begin
 							if sample_counts(i) < "100000" then
 								brightnesses(i) <= end_or_max_bris(i);
 							else
-								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?
+								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?, it did!
 							end if;
 								
 						when others =>
