@@ -11,22 +11,74 @@ use work.led_types.all;
 entity func_gen is
 	
 	port(	 
-		sup_count    : in std_logic_vector(5 downto 0);
-		startBrs      : in brightness_array;
-		spans         : in brightness_array;
-		pds           : in time_array;
-		clk12MHz     : in std_logic;
-		funcs         : in func_array;
+
+		end_or_max_bris      : in brightness_array;
+		spans                : in brightness_array;
+		pds                  : in time_array;
+		clk12MHz             : in std_logic;
+		funcs                : in func_array;
 		
-		brightnesses : out brightness_array;
+		clk_count            : in std_logic_vector(5 downto 0);--this is shared to not waste resources
+		
+		brightnesses         : out brightness_array
 		
 		 );
 end func_gen;
 
 
 architecture a of func_gen is
+
+	--arbitrarily I picked 0.05s resolution and 64 samples. That leads to 16 bit pulse pd ct and 6 bit sample ct (one pulse pd is 5.3333us)
+	
+	signal pulse_pd_counts      : pulse_pd_count_array; --these are independent for ease of computation. If shared, would have to store start time anyways to handle diff pds
+	signal sample_counts        : sample_count_array;
+	signal pds_per_sample_nums	 : pulse_pd_count_array; --this could be 37500 at max pd
 	
 begin
 	
-
+	process(clk12MHz)
+	begin
+		if rising_edge(clk12MHz) then
+		
+				for i in 0 to 9 loop
+					--this case takes care of setting brightnesses based on sample counts
+					case funcs(i) is 
+						when step   =>
+							brightnesses(i) <= end_or_max_bris(i);
+							
+						when square =>
+							if sample_counts(i) < "100000" then
+								brightnesses(i) <= end_or_max_bris(i);
+							else
+								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?
+							end if;
+								
+						when others =>
+							brightnesses(i) <= end_or_max_bris(i);
+					end case;
+					
+					--this part sets up pd counts correctly based on clk_count
+					if clk_count = "111111" then
+						if pulse_pd_counts(i) = pds_per_sample_nums(i) then
+							pulse_pd_counts(i) <= "0000000000000000";
+						else
+							pulse_pd_counts(i) <= pulse_pd_counts(i) + 1;
+						end if;	
+					end if;
+					
+					--this part sets up sample counts based on pd counts
+					if pulse_pd_counts(i) = pds_per_sample_nums(i) then
+						if sample_counts(i) = "111111" then
+							sample_counts(i) <= "000000";
+						else
+							sample_counts(i) <= sample_counts(i) + 1;
+						end if;	
+					end if;
+					
+				end loop;
+				
+		end if;
+	end process;
+	
+	pds_per_sample_nums <= (others => "0000101101110010");
 end a;

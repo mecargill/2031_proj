@@ -5,20 +5,27 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 080D; -- 	LOAD Test
-0001: 9820; -- 	OUT NewLEDs
-0002: 9802; -- 	OUT Timer
-0003: 9002; -- 	IN Timer
-0004: 6FCE; -- 	ADDI -50
-0005: 3003; -- 	JNEG wait
-0006: 080E; -- LOAD Test2
+0000: 0814; -- LOAD AllOff
+0001: 9820; -- OUT NewLEDs
+0002: 800D; -- Call wait1sec
+0003: 0813; -- LOAD AllMed
+0004: 9820; -- OUT NewLEDs
+0005: 800D; -- call wait1sec
+0006: 0812; -- LOAD AllOn
 0007: 9820; -- OUT NewLEDs
-0008: 9802; -- Out Timer
-0009: 9002; -- 	IN Timer
-000A: 6FCE; -- 	ADDI -50
-000B: 3009; -- 	JNEG wait2
-000C: 2800; -- jump 0
-000D: FFE0; -- Test:  dw &B1111111111100000
-000E: FFE1; -- Test2: dw &B1111111111100001
-[000F..07FF] : 0000; -- [empty memory]
+0008: 800D; -- call wait1sec
+0009: 0815; -- LOAD LeftMed
+000A: 9820; -- OUT NewLEDs
+000B: 800D; -- call wait1sec
+000C: 2800; -- Jump 0
+000D: 9802; -- 	out timer
+000E: 9002; -- 		IN Timer
+000F: 6FF6; -- 		ADDI -10
+0010: 300E; -- 		JNEG wait
+0011: 8800; -- 	return
+0012: FFFF; -- AllOn:  dw &B1111111111111111
+0013: 0BFF; -- AllMed: dw &B0000101111111111
+0014: 03FF; -- AllOff: dw &B0000001111111111
+0015: 0BE0; -- LeftMed: dw &B0000101111100000
+[0016..07FF] : 0000; -- [empty memory]
 END;

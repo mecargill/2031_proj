@@ -765,7 +765,7 @@ https://fpgasoftware.intel.com/eula.
 		(pt 192 32)
 		(output)
 		(text "leds[9..0]" (rect 0 0 46 12)(font "Arial" ))
-		(text "leds[9..0]" (rect 133 27 171 39)(font "Arial" ))
+		(text "leds[9..0]" (rect 133 27 179 39)(font "Arial" ))
 		(line (pt 192 32)(pt 176 32)(line_width 3))
 	)
 	(drawing
@@ -1090,13 +1090,23 @@ https://fpgasoftware.intel.com/eula.
 	(pt 792 728)
 	(pt 624 728)
 )
+(connector
+	(text "LED_EN1" (rect 1034 344 1077 361)(font "Intel Clear" ))
+	(pt 1024 360)
+	(pt 1072 360)
+)
+(connector
+	(text "LED_EN2" (rect 1034 360 1077 377)(font "Intel Clear" ))
+	(pt 1024 376)
+	(pt 1072 376)
+)
 (junction (pt 536 280))
 (text "The daughterboard test points." (rect 1264 832 1446 851)(font "Intel Clear" (font_size 8)))
 (text "Can be useful for testing using the oscilloscope." (rect 1264 856 1541 875)(font "Intel Clear" (font_size 8)))
 (title_block
 	(rect 1112 1264 1480 1384)
 	(section (rect 0 24 368 48)(text "COMPANY" (rect 2 0 57 12)(font "Arial" ))(text "GaTech DDL" (rect 56 2 170 20)(font "Arial" (font_size 12)))(border))
-	(section (rect 0 96 240 120)(text "DATE" (rect 2 0 30 12)(font "Arial" ))(text "Thu Mar 27 15:01:45 2025" (rect 56 3 234 19)(font "Arial" (font_size 10)))(date)(border))
+	(section (rect 0 96 240 120)(text "DATE" (rect 2 0 30 12)(font "Arial" ))(text "Fri Mar 28 09:56:50 2025" (rect 56 3 227 19)(font "Arial" (font_size 10)))(date)(border))
 	(section (rect 0 48 368 72)(text "DESIGNER" (rect 2 0 59 12)(font "Arial" ))(text "Kevin Johnson, Tom Collins" (rect 56 2 286 20)(font "Arial" (font_size 12)))(border))
 	(section (rect 0 72 280 96)(text "NUMBER" (rect 2 0 49 12)(font "Arial" ))(text "1.00" (rect 56 1 85 17)(font "Arial" (font_size 10)))(border))
 	(section (rect 310 96 368 120)(text "OF" (rect 10 0 25 12)(font "Arial" ))(text "1" (rect 34 4 42 20)(font "Arial" (font_size 10))))
