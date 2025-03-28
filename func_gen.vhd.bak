@@ -1,0 +1,23 @@
+library ieee;
+library lpm;
+
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all; --gives signed + unsigned types (but is not actually iee standard)
+use ieee.std_logic_unsigned.all; --overloads operations for std_logic types
+use lpm.lpm_components.all;
+use work.led_types.all;
+
+entity func_gen is
+	
+port(
+	
+    );
+end func_gen;
+
+
+architecture a of func_gen is
+	
+begin
+	
+
+end a;
