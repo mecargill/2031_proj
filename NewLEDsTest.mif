@@ -5,20 +5,20 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 080E; -- LOAD pulse
-0001: 9821; -- OUT fnsel
-0002: 080A; -- load allOn
-0003: 9820; -- out newleds
-0004: 2804; -- jump here
-0005: 9802; -- 	out timer
-0006: 9002; -- 		IN Timer
-0007: 6FE2; -- 		ADDI -30
-0008: 3006; -- 		JNEG wait
-0009: 8800; -- 	return
-000A: FFFF; -- AllOn:  dw &B1111111111111111
-000B: 0BFF; -- AllMed: dw &B0000101111111111
-000C: 03FF; -- AllOff: dw &B0000001111111111
-000D: 0BE0; -- LeftMed: dw &B0000101111100000
-000E: 7FFF; -- pulse: dw &B0111111111111111
+0000: 080D; -- 	LOAD allon
+0001: 9820; -- 	OUT NewLEDs
+0002: 9802; -- 	OUT Timer
+0003: 9002; -- 	IN Timer
+0004: 6FFB; -- 	ADDI -5
+0005: 3003; -- 	JNEG wait
+0006: 080E; -- LOAD rightmed
+0007: 9820; -- OUT NewLEDs
+0008: 9802; -- Out Timer
+0009: 9002; -- 	IN Timer
+000A: 6FFB; -- 	ADDI -5
+000B: 3009; -- 	JNEG wait2
+000C: 2800; -- jump 0
+000D: FFFF; -- AllOn:    dw &B1111111111111111
+000E: 041F; -- rightMed: dw &B0000010000011111
 [000F..07FF] : 0000; -- [empty memory]
 END;
