@@ -34,6 +34,8 @@ architecture a of func_gen is
 	signal sample_counts        : sample_count_array;
 	signal pds_per_sample_nums	 : pulse_pd_count_array; --this could be 37500 at max pd
 	
+	signal simple_count         : std_logic_vector(23 downto 0);
+	
 begin
 	
 	process(clk12MHz)
@@ -47,38 +49,22 @@ begin
 							brightnesses(i) <= end_or_max_bris(i);
 							
 						when square =>
-							if sample_counts(i) < "100000" then
+							if simple_count < x"800000" then
 								brightnesses(i) <= end_or_max_bris(i);
 							else
-								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?, it did!
+								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?, it did!... maybe...
 							end if;
 								
 						when others =>
 							brightnesses(i) <= end_or_max_bris(i);
 					end case;
 					
-					--this part sets up pd counts correctly based on clk_count
-					if clk_count = "111111" then
-						if pulse_pd_counts(i) = pds_per_sample_nums(i) then
-							pulse_pd_counts(i) <= "0000000000000000";
-						else
-							pulse_pd_counts(i) <= pulse_pd_counts(i) + 1;
-						end if;	
-					end if;
-					
-					--this part sets up sample counts based on pd counts
-					if pulse_pd_counts(i) = pds_per_sample_nums(i) then
-						if sample_counts(i) = "111111" then
-							sample_counts(i) <= "000000";
-						else
-							sample_counts(i) <= sample_counts(i) + 1;
-						end if;	
-					end if;
+					--t
 					
 				end loop;
-				
+				simple_count <= simple_count + 1;
 		end if;
 	end process;
 	
-	pds_per_sample_nums <= (others => "0000101101110010");
+	pds_per_sample_nums <= (others => "0000101101110000");
 end a;

@@ -1,8 +1,10 @@
 ; An empty ASM program ...
 
 ORG 0
-LOAD pulse
+
+LOAD AllOn
 OUT fnsel
+wait1sec
 load allOn
 out newleds
 
