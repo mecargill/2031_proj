@@ -35,7 +35,7 @@ architecture a of ledcontroller is
 			clk12MHz     : in  std_logic;
 			io_data      : in  std_logic_vector(15 downto 0);
 
-			g_adj_bris   : out brightness_array; --gamma adjusted brightnesses (6 bit) based on input bri(4 bit)
+			fn_bris   : out brightness_array; --gamma adjusted brightnesses (6 bit) based on input bri(4 bit)
 		   funcs        : out func_array        --which animation/function to apply
 			
       );
@@ -44,7 +44,7 @@ architecture a of ledcontroller is
 	component func_gen
 		port(
 			
-			g_adj_bris   : in brightness_array;
+			fn_bris   : in brightness_array;
 			clk12MHz     : in std_logic;
 			funcs        : in func_array;
 			
@@ -64,7 +64,7 @@ architecture a of ledcontroller is
 
 
 	
-	signal g_adj_bris   : brightness_array;
+	signal fn_bris   : brightness_array;
 	signal funcs        : func_array;
 	
 	signal brightnesses : brightness_array;
@@ -81,14 +81,14 @@ begin
 			io_data => io_data,
 
 			
-			g_adj_bris => g_adj_bris,
+			fn_bris => fn_bris,
 			funcs => funcs		
 		);
 		
 	comp2: func_gen
 		port map(
 	
-			g_adj_bris => g_adj_bris,
+			fn_bris => fn_bris,
 			clk12MHz => clk12MHz,
 			funcs => funcs,
 	

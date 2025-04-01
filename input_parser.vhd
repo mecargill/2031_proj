@@ -21,7 +21,7 @@ entity input_parser is
 		 io_data     : in  std_logic_vector(15 downto 0);
 		 
 
-		 g_adj_bris   : out brightness_array; --gamma adjusted brightnesses (6 bit) based on input bri(4 bit)
+		 fn_bris      : out brightness_array; --brightness param for the func gen to use
 		 funcs        : out func_array        --which animation/function to apply
 		 
 		 );
@@ -31,16 +31,14 @@ end input_parser;
 architecture a of input_parser is
 	
 	signal input_bri     : integer range 0 to 15; --this is not gamma adjusted, directly coming from command
-	--LUT uses normal, top to bottom indexing, unlike the std logic vectors inside of it
-
 	
-	--These values were just put in as a guess. they weren't calculated. we should find a real model
-	constant gamma_LUT   : gamma_LUT_type := (
-		"000000","000001","000010","000011",
-		"000100","000101","000110","000111",
-		"001000","001010","001100","001110",
-		"001111","010000","011111","111111"
-	);
+	--LUT uses normal, top to bottom indexing, unlike the std logic vectors inside of it
+	constant linspace   : input_conversion_type := (
+		"000000",	"000100",	"001000",	"001100",
+		"010000",	"010101",	"011001",	"011101",
+		"100001",	"100101",	"101010",	"101110",
+		"110010",	"110110",	"111010",	"111111"
+);
 	
 begin
 	--this process takes 0x20 commands
@@ -48,7 +46,7 @@ begin
 		begin
 		if resetn = '0' then
 			--ensure they stay off after resetn assertion (there is also async reset in pulse gen)
-			g_adj_bris <= (others => "000000");
+			fn_bris <= (others => "000000");
 			funcs <= (others => step);
 			
 		elsif rising_edge(cs0) and write_en = '1' then
@@ -68,8 +66,8 @@ begin
 						when "11" =>
 							funcs(i) <= linear;
 					end case;	
-					--assign g_adj_bris
-					g_adj_bris(i) <= gamma_LUT(input_bri);
+					--assign fn_bris
+					fn_bris(i) <= linspace(input_bri);
 					
 				end if;
 			end loop;
