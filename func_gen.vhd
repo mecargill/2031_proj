@@ -29,14 +29,14 @@ architecture a of func_gen is
 	constant period             : std_logic_vector(23 downto 0) := x"FFFFFF";--the period is this as a number times the clock pd, 1/12million = 83.3 ns
 	--used matlab
 	constant sine_wave : fn_LUT_type := (
-    "011111",   "100010",   "100101",  "101000",   "101011",  "101110",   "110001",   "110011",
-    "110101",   "110111",   "111001",  "111011",   "111100",  "111101",   "111110",   "111110",
-    "111111",   "111110",   "111110",  "111101",   "111100",  "111011",   "111001",   "110111",
-    "110101",   "110011",   "110001",  "101110",   "101011",  "101000",   "100101",   "100010",
-    "011111",   "011100",   "011001",  "010110",   "010011",  "010000",   "001101",   "001011",
-    "001001",   "000111",   "000101",  "000011",   "000010",  "000001",   "000000",   "000000",
-    "000000",   "000000",   "000000",  "000001",   "000010",  "000011",   "000101",   "000111",
-    "001001",   "001011",   "001101",  "010000",   "010011",  "010110",   "011001",   "011100"
+    "0100000", "0100011", "0100110", "0101001", "0101100", "0101111", "0110001", "0110100",
+	 "0110110", "0111000", "0111010", "0111100", "0111101", "0111110", "0111111", "0111111",
+	 "1000000", "0111111", "0111111", "0111110", "0111101", "0111100", "0111010", "0111000",
+	 "0110110", "0110100", "0110001", "0101111", "0101100", "0101001", "0100110", "0100011",
+	 "0100000", "0011100", "0011001", "0010110", "0010011", "0010000", "0001110", "0001011",
+	 "0001001", "0000111", "0000101", "0000011", "0000010", "0000001", "0000000", "0000000",
+	 "0000000", "0000000", "0000000", "0000001", "0000010", "0000011", "0000101", "0000111",
+	 "0001001", "0001011", "0001110", "0010000", "0010011", "0010110", "0011001", "0011100"
 	);
 
 begin
@@ -48,20 +48,31 @@ begin
 					case funcs(i) is 
 					
 						when step   =>
+						
 							brightnesses(i) <= fn_bris(i);
 							
 						when square =>
+						
 							--logical right shift for 50% duty cycle
 							if unsigned(simple_count) <= (unsigned(period) srl 1) then
 								brightnesses(i) <= fn_bris(i);
 							else
 								brightnesses(i) <= "000000"; 
 							end if;
+							
 						when sine =>
-							brightnesses(i) <= sine_wave(to_integer(unsigned(simple_count) srl 18)); --this will not adjust with period or brightness
+							--take let 6 bits as index to sine_wave, mult by input bri, then divide by 2^6, the current max val of sine_wave
+							--only right 6 bits should be nonzero
+							brightnesses(i) <= std_logic_vector(unsigned(sine_wave(to_integer(unsigned(simple_count) srl 18)) * fn_bris(i)) srl 6)(5 downto 0); 
+						
 						when linear =>
-							--could be a bit hard with just one count
-							brightnesses(i) <= fn_bris(i);
+							--right 18 bits being 0 happens once every 2^18 cycles => if you fade from 0 to max it takes 2^18 * 2^6 * 83.3ns = 1.398s, which should be slow enough
+							if ((simple_count and "111111000000000000000000") = simple_count) and brightnesses(i) < fn_bris(i) then
+								brightnesses(i) <= brightnesses(i) + 1;
+							elsif
+								((simple_count and "111111000000000000000000") = simple_count) and brightnesses(i) > fn_bris(i) then
+									brightnesses(i) <= brightnesses(i) - 1;
+							end if;
 							
 					end case;
 				end loop;

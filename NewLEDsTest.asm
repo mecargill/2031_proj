@@ -33,6 +33,14 @@ load lsin
 out newleds
 call wait4sec
 
+load offlin
+out newleds
+call wait4sec
+
+load onlin
+out newleds
+call wait4sec
+
 jump start
 
 
@@ -52,6 +60,14 @@ wait1sec:
 		JNEG wait1
 	return
 	
+waithalfsec:
+	out timer
+	waithalf:
+		in timer
+		addi -5
+		jneg waithalf
+	return
+	
 ; IO address constants
 Switches:  EQU 000
 Timer:     EQU 002
@@ -66,6 +82,8 @@ all3:    dw &B0000111111111111
 alt8:    dw &B0010001010101010
 all15:   dw &B0011111111111111
 lsqfull: dw &B0111111111100000
-rsqdim:  dw &B0100010000011111
-lsin:    dw &B1100001111100000
+rsqdim:  dw &B0100100000011111
+lsin:    dw &B1011111111100000
+offlin:  dw &B1100001111111111
+onlin:   dw &B1111111111111111
 
