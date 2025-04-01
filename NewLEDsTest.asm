@@ -1,23 +1,51 @@
-; An empty ASM program ...
+;test of peripheral
+start:
 
-ORG 0
-
-LOAD AllOn
-OUT fnsel
-wait1sec
-load allOn
+load alloff
 out newleds
+call wait1sec
 
-here:
-jump here
+load all1
+out newleds
+call wait1sec
+
+load all3
+out newleds
+call wait1sec
+
+load alt8
+out newleds
+call wait1sec
+
+load all15
+out newleds
+call wait1sec
+
+load lsqfull
+out newleds
+call wait4sec
+
+load rsqdim
+out newleds
+call wait4sec
+
+jump start
 
 
+wait4sec:
+	out timer
+	wait4:
+		IN Timer
+		ADDI -40
+		JNEG wait4
+	return
+	
 wait1sec:
 	out timer
-	wait:
+	wait1:
 		IN Timer
-		ADDI -30
-		JNEG wait
+		ADDI -10
+		JNEG wait1
 	return
 	
 ; IO address constants
@@ -26,9 +54,13 @@ Timer:     EQU 002
 Hex0:      EQU 004
 Hex1:      EQU 005
 NewLEDs:   EQU &H020
-fnsel: EQU &H021
-AllOn:  dw &B1111111111111111
-AllMed: dw &B0000101111111111
-AllOff: dw &B0000001111111111
-LeftMed: dw &B0000101111100000
-pulse: dw &B0111111111111111
+
+;commands to send
+alloff:  dw &B0000001111111111
+all1:    dw &B0000011111111111
+all3:    dw &B0000111111111111
+alt8:    dw &B0010001010101010
+all15:   dw &B0011111111111111
+lsqfull: dw &B0111111111100000
+rsqdim:  dw &B0100010000011111
+

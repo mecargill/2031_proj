@@ -5,20 +5,44 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 080E; -- LOAD pulse
-0001: 9821; -- OUT fnsel
-0002: 080A; -- load allOn
-0003: 9820; -- out newleds
-0004: 2804; -- jump here
-0005: 9802; -- 	out timer
-0006: 9002; -- 		IN Timer
-0007: 6FE2; -- 		ADDI -30
-0008: 3006; -- 		JNEG wait
-0009: 8800; -- 	return
-000A: FFFF; -- AllOn:  dw &B1111111111111111
-000B: 0BFF; -- AllMed: dw &B0000101111111111
-000C: 03FF; -- AllOff: dw &B0000001111111111
-000D: 0BE0; -- LeftMed: dw &B0000101111100000
-000E: 7FFF; -- pulse: dw &B0111111111111111
-[000F..07FF] : 0000; -- [empty memory]
+0000: 0820; -- load alloff
+0001: 9820; -- out newleds
+0002: 801B; -- call wait1sec
+0003: 0821; -- load all1
+0004: 9820; -- out newleds
+0005: 801B; -- call wait1sec
+0006: 0822; -- load all3
+0007: 9820; -- out newleds
+0008: 801B; -- call wait1sec
+0009: 0823; -- load alt8
+000A: 9820; -- out newleds
+000B: 801B; -- call wait1sec
+000C: 0824; -- load all15
+000D: 9820; -- out newleds
+000E: 801B; -- call wait1sec
+000F: 0825; -- load lsqfull
+0010: 9820; -- out newleds
+0011: 8016; -- call wait4sec
+0012: 0826; -- load rsqdim
+0013: 9820; -- out newleds
+0014: 8016; -- call wait4sec
+0015: 2800; -- jump start
+0016: 9802; -- 	out timer
+0017: 9002; -- 		IN Timer
+0018: 6FD8; -- 		ADDI -40
+0019: 3017; -- 		JNEG wait4
+001A: 8800; -- 	return
+001B: 9802; -- 	out timer
+001C: 9002; -- 		IN Timer
+001D: 6FF6; -- 		ADDI -10
+001E: 301C; -- 		JNEG wait1
+001F: 8800; -- 	return
+0020: 03FF; -- alloff:  dw &B0000001111111111
+0021: 07FF; -- all1:    dw &B0000011111111111
+0022: 0FFF; -- all3:    dw &B0000111111111111
+0023: 22AA; -- alt8:    dw &B0010001010101010
+0024: 3FFF; -- all15:   dw &B0011111111111111
+0025: 7FE0; -- lsqfull: dw &B0111111111100000
+0026: 441F; -- rsqdim:  dw &B0100010000011111
+[0027..07FF] : 0000; -- [empty memory]
 END;
