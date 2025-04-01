@@ -10,5 +10,6 @@ package led_types is
 	type func_type is (step, square, sine, linear);
 	type func_array is array(9 downto 0) of func_type;
 	
-	type gamma_adjustment_array is array (0 to 15) of std_logic_vector(5 downto 0);
+	type bri_LUT_type is array(0 to 63) of std_logic_vector(5 downto 0);
+	type gamma_LUT_type is array(15 downto 0) of std_logic_vector(5 downto 0);
 end package;

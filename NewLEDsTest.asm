@@ -29,6 +29,10 @@ load rsqdim
 out newleds
 call wait4sec
 
+load lsin
+out newleds
+call wait4sec
+
 jump start
 
 
@@ -63,4 +67,5 @@ alt8:    dw &B0010001010101010
 all15:   dw &B0011111111111111
 lsqfull: dw &B0111111111100000
 rsqdim:  dw &B0100010000011111
+lsin:    dw &B1100001111100000
 

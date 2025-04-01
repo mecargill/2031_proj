@@ -35,7 +35,7 @@ architecture a of input_parser is
 
 	
 	--These values were just put in as a guess. they weren't calculated. we should find a real model
-	constant gamma_LUT   : gamma_adjustment_array := (
+	constant gamma_LUT   : gamma_LUT_type := (
 		"000000","000001","000010","000011",
 		"000100","000101","000110","000111",
 		"001000","001010","001100","001110",
