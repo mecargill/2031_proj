@@ -2,83 +2,90 @@ library ieee;
 library lpm;
 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all; --gives signed + unsigned types (but is not actually iee standard)
+use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all; --overloads operations for std_logic types
 use lpm.lpm_components.all;
 use work.led_types.all;
 
---This device takes in function parameters and updates the function param memory, then 
+--This device takes in function parameters and outputs brightnesses to pulse gen
 entity func_gen is
 	
 	port(	 
 
-		end_or_max_bris      : in brightness_array;
-		spans                : in brightness_array;
-		pds                  : in time_array;
+		fn_bris              : in brightness_array;
 		clk12MHz             : in std_logic;
 		funcs                : in func_array;
 		
-		clk_count            : in std_logic_vector(5 downto 0);--this is shared to not waste resources
 		
-		brightnesses         : out brightness_array
+		brightnesses         : buffer brightness_array
 		
 		 );
 end func_gen;
 
 
 architecture a of func_gen is
+	signal simple_count         : std_logic_vector(23 downto 0); --2^24 * 83.3ns = 1.398s max period
+	
+	constant period             : std_logic_vector(23 downto 0) := x"FFFFFF";--the period is this as a number times the clock pd, 1/12million = 83.3 ns
+	--used matlab
+	constant sine_wave : fn_LUT_type := (
+    "0100000", "0100011", "0100110", "0101001", "0101100", "0101111", "0110001", "0110100",
+	 "0110110", "0111000", "0111010", "0111100", "0111101", "0111110", "0111111", "0111111",
+	 "1000000", "0111111", "0111111", "0111110", "0111101", "0111100", "0111010", "0111000",
+	 "0110110", "0110100", "0110001", "0101111", "0101100", "0101001", "0100110", "0100011",
+	 "0100000", "0011100", "0011001", "0010110", "0010011", "0010000", "0001110", "0001011",
+	 "0001001", "0000111", "0000101", "0000011", "0000010", "0000001", "0000000", "0000000",
+	 "0000000", "0000000", "0000000", "0000001", "0000010", "0000011", "0000101", "0000111",
+	 "0001001", "0001011", "0001110", "0010000", "0010011", "0010110", "0011001", "0011100"
+	);
 
-	--arbitrarily I picked 0.05s resolution and 64 samples. That leads to 16 bit pulse pd ct and 6 bit sample ct (one pulse pd is 5.3333us)
-	
-	signal pulse_pd_counts      : pulse_pd_count_array; --these are independent for ease of computation. If shared, would have to store start time anyways to handle diff pds
-	signal sample_counts        : sample_count_array;
-	signal pds_per_sample_nums	 : pulse_pd_count_array; --this could be 37500 at max pd
-	
 begin
-	
+
 	process(clk12MHz)
 	begin
 		if rising_edge(clk12MHz) then
-		
 				for i in 0 to 9 loop
-					--this case takes care of setting brightnesses based on sample counts
 					case funcs(i) is 
+					
 						when step   =>
-							brightnesses(i) <= end_or_max_bris(i);
+						
+							brightnesses(i) <= fn_bris(i);
 							
 						when square =>
-							if sample_counts(i) < "100000" then
-								brightnesses(i) <= end_or_max_bris(i);
+						
+							--logical right shift for 50% duty cycle
+							if unsigned(simple_count) <= (unsigned(period) srl 1) then
+								brightnesses(i) <= fn_bris(i);
 							else
-								brightnesses(i) <= (end_or_max_bris(i) - spans(i)); --will this work?, it did!
+								brightnesses(i) <= "000000"; 
 							end if;
-								
-						when others =>
-							brightnesses(i) <= end_or_max_bris(i);
+							
+						when sine =>
+							--take let 6 bits as index to sine_wave, mult by input bri, then divide by 2^6, the current max val of sine_wave
+							--only right 6 bits should be nonzero
+							brightnesses(i) <= std_logic_vector(unsigned(sine_wave(to_integer(unsigned(simple_count) srl 18)) * fn_bris(i)) srl 6)(5 downto 0); 
+						
+						when linear =>
+							--right 18 bits being 0 happens once every 2^18 cycles => if you fade from 0 to max it takes 2^18 * 2^6 * 83.3ns = 1.398s, which should be slow enough
+							if ((simple_count and "111111000000000000000000") = simple_count) and brightnesses(i) < fn_bris(i) then
+								brightnesses(i) <= brightnesses(i) + 1;
+							elsif
+								((simple_count and "111111000000000000000000") = simple_count) and brightnesses(i) > fn_bris(i) then
+									brightnesses(i) <= brightnesses(i) - 1;
+							end if;
+							
 					end case;
-					
-					--this part sets up pd counts correctly based on clk_count
-					if clk_count = "111111" then
-						if pulse_pd_counts(i) = pds_per_sample_nums(i) then
-							pulse_pd_counts(i) <= "0000000000000000";
-						else
-							pulse_pd_counts(i) <= pulse_pd_counts(i) + 1;
-						end if;	
-					end if;
-					
-					--this part sets up sample counts based on pd counts
-					if pulse_pd_counts(i) = pds_per_sample_nums(i) then
-						if sample_counts(i) = "111111" then
-							sample_counts(i) <= "000000";
-						else
-							sample_counts(i) <= sample_counts(i) + 1;
-						end if;	
-					end if;
-					
 				end loop;
 				
+				
+				
+				if simple_count = period then
+					simple_count <= x"000000";
+				else
+					simple_count <= simple_count + 1;
+				end if;
 		end if;
 	end process;
 	
-	pds_per_sample_nums <= (others => "0000101101110010");
+	
 end a;
