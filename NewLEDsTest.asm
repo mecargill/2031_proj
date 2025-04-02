@@ -1,89 +1,115 @@
-;test of peripheral
-start:
+;test
+org 0
 
-load alloff
-out newleds
+load clr
+out leds
 call wait1sec
 
-load all1
-out newleds
+load cmd0
+out leds
+call wait1sec 
+
+load cmd1
+out leds
 call wait1sec
 
-load all3
-out newleds
+load cmd2
+out leds
 call wait1sec
 
-load alt8
-out newleds
+load cmd3
+out leds
 call wait1sec
 
-load all15
-out newleds
+load cmd4
+out leds
 call wait1sec
 
-load lsqfull
-out newleds
-call wait4sec
+jump 0
 
-load rsqdim
-out newleds
-call wait4sec
+load cmd5
+out leds
+call wait1sec
 
-load lsin
-out newleds
-call wait4sec
+load cmd6
+out leds
+call wait1sec
 
-load offlin
-out newleds
-call wait4sec
+load cmd7
+out leds
+call wait1sec
 
-load onlin
-out newleds
-call wait4sec
+load cmd8
+out leds
+call wait1sec
 
-jump start
+load cmd9
+out leds
+call wait1sec
+
+load clr
+out leds
+call wait1sec
+
+load cmd10
+out leds
+call wait1sec
+
+load cmd11
+out leds
+call wait1sec
+
+load cmd12
+out leds
+call wait1sec
+
+load cmd13
+out leds
+call wait1sec
+
+load cmd14
+out leds
+call wait1sec
+
+load cmd15
+out leds
+call wait1sec
 
 
-wait4sec:
-	out timer
-	wait4:
-		IN Timer
-		ADDI -40
-		JNEG wait4
-	return
-	
+
+
+
 wait1sec:
 	out timer
 	wait1:
-		IN Timer
-		ADDI -10
-		JNEG wait1
-	return
-	
-waithalfsec:
-	out timer
-	waithalf:
 		in timer
-		addi -5
-		jneg waithalf
+		addi -40
+		jneg wait1
 	return
-	
-; IO address constants
-Switches:  EQU 000
-Timer:     EQU 002
-Hex0:      EQU 004
-Hex1:      EQU 005
-NewLEDs:   EQU &H020
+		
+;demo gamma
+clr:   dw &B0000001111111111
 
-;commands to send
-alloff:  dw &B0000001111111111
-all1:    dw &B0000011111111111
-all3:    dw &B0000111111111111
-alt8:    dw &B0010001010101010
-all15:   dw &B0011111111111111
-lsqfull: dw &B0111111111100000
-rsqdim:  dw &B0100100000011111
-lsin:    dw &B1011111111100000
-offlin:  dw &B1100001111111111
-onlin:   dw &B1111111111111111
+cmd0:  dw &B0011111010101010
+cmd1:  dw &B1100011111111111
+cmd2:  dw &B1111111111111111
+cmd3:  dw &B0100101010101010
+cmd4:  dw &B1011111111111111
+cmd5:  dw &B0
+cmd6:  dw &B0
+cmd7:  dw &B0
+cmd8:  dw &B0
+cmd9:  dw &B0
+cmd10: dw &B0
+cmd11: dw &B0
+cmd12: dw &B0
+cmd13: dw &B0
+cmd14: dw &B0
+cmd15: dw &B0
+;00 is step, 01 is square, 10 is sine, 11 is lin
+;demo flashing
 
+
+;addresses
+timer equ 002
+leds equ &H020

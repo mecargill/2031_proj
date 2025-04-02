@@ -5,61 +5,82 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 082E; -- load alloff
-0001: 9820; -- out newleds
-0002: 8024; -- call wait1sec
-0003: 082F; -- load all1
-0004: 9820; -- out newleds
-0005: 8024; -- call wait1sec
-0006: 0830; -- load all3
-0007: 9820; -- out newleds
-0008: 8024; -- call wait1sec
-0009: 0831; -- load alt8
-000A: 9820; -- out newleds
-000B: 8024; -- call wait1sec
-000C: 0832; -- load all15
-000D: 9820; -- out newleds
-000E: 8024; -- call wait1sec
-000F: 0833; -- load lsqfull
-0010: 9820; -- out newleds
-0011: 801F; -- call wait4sec
-0012: 0834; -- load rsqdim
-0013: 9820; -- out newleds
-0014: 801F; -- call wait4sec
-0015: 0835; -- load lsin
-0016: 9820; -- out newleds
-0017: 801F; -- call wait4sec
-0018: 0836; -- load offlin
-0019: 9820; -- out newleds
-001A: 801F; -- call wait4sec
-001B: 0837; -- load onlin
-001C: 9820; -- out newleds
-001D: 801F; -- call wait4sec
-001E: 2800; -- jump start
-001F: 9802; -- 	out timer
-0020: 9002; -- 		IN Timer
-0021: 6FD8; -- 		ADDI -40
-0022: 3020; -- 		JNEG wait4
-0023: 8800; -- 	return
-0024: 9802; -- 	out timer
-0025: 9002; -- 		IN Timer
-0026: 6FF6; -- 		ADDI -10
-0027: 3025; -- 		JNEG wait1
-0028: 8800; -- 	return
-0029: 9802; -- 	out timer
-002A: 9002; -- 		in timer
-002B: 6FFB; -- 		addi -5
-002C: 302A; -- 		jneg waithalf
-002D: 8800; -- 	return
-002E: 03FF; -- alloff:  dw &B0000001111111111
-002F: 07FF; -- all1:    dw &B0000011111111111
-0030: 0FFF; -- all3:    dw &B0000111111111111
-0031: 22AA; -- alt8:    dw &B0010001010101010
-0032: 3FFF; -- all15:   dw &B0011111111111111
-0033: 7FE0; -- lsqfull: dw &B0111111111100000
-0034: 481F; -- rsqdim:  dw &B0100100000011111
-0035: BFE0; -- lsin:    dw &B1011111111100000
-0036: C3FF; -- offlin:  dw &B1100001111111111
-0037: FFFF; -- onlin:   dw &B1111111111111111
-[0038..07FF] : 0000; -- [empty memory]
+0000: 083C; -- load clr
+0001: 9820; -- out leds
+0002: 8037; -- call wait1sec
+0003: 083D; -- load cmd0
+0004: 9820; -- out leds
+0005: 8037; -- call wait1sec 
+0006: 083E; -- load cmd1
+0007: 9820; -- out leds
+0008: 8037; -- call wait1sec
+0009: 083F; -- load cmd2
+000A: 9820; -- out leds
+000B: 8037; -- call wait1sec
+000C: 0840; -- load cmd3
+000D: 9820; -- out leds
+000E: 8037; -- call wait1sec
+000F: 0841; -- load cmd4
+0010: 9820; -- out leds
+0011: 8037; -- call wait1sec
+0012: 2800; -- jump 0
+0013: 0842; -- load cmd5
+0014: 9820; -- out leds
+0015: 8037; -- call wait1sec
+0016: 0843; -- load cmd6
+0017: 9820; -- out leds
+0018: 8037; -- call wait1sec
+0019: 0844; -- load cmd7
+001A: 9820; -- out leds
+001B: 8037; -- call wait1sec
+001C: 0845; -- load cmd8
+001D: 9820; -- out leds
+001E: 8037; -- call wait1sec
+001F: 0846; -- load cmd9
+0020: 9820; -- out leds
+0021: 8037; -- call wait1sec
+0022: 083C; -- load clr
+0023: 9820; -- out leds
+0024: 8037; -- call wait1sec
+0025: 0847; -- load cmd10
+0026: 9820; -- out leds
+0027: 8037; -- call wait1sec
+0028: 0848; -- load cmd11
+0029: 9820; -- out leds
+002A: 8037; -- call wait1sec
+002B: 0849; -- load cmd12
+002C: 9820; -- out leds
+002D: 8037; -- call wait1sec
+002E: 084A; -- load cmd13
+002F: 9820; -- out leds
+0030: 8037; -- call wait1sec
+0031: 084B; -- load cmd14
+0032: 9820; -- out leds
+0033: 8037; -- call wait1sec
+0034: 084C; -- load cmd15
+0035: 9820; -- out leds
+0036: 8037; -- call wait1sec
+0037: 9802; -- 	out timer
+0038: 9002; -- 		in timer
+0039: 6FD8; -- 		addi -40
+003A: 3038; -- 		jneg wait1
+003B: 8800; -- 	return
+003C: 03FF; -- clr:   dw &B0000001111111111
+003D: 3EAA; -- cmd0:  dw &B0011111010101010
+003E: C7FF; -- cmd1:  dw &B1100011111111111
+003F: FFFF; -- cmd2:  dw &B1111111111111111
+0040: 4AAA; -- cmd3:  dw &B0100101010101010
+0041: BFFF; -- cmd4:  dw &B1011111111111111
+0042: 0000; -- cmd5:  dw &B0
+0043: 0000; -- cmd6:  dw &B0
+0044: 0000; -- cmd7:  dw &B0
+0045: 0000; -- cmd8:  dw &B0
+0046: 0000; -- cmd9:  dw &B0
+0047: 0000; -- cmd10: dw &B0
+0048: 0000; -- cmd11: dw &B0
+0049: 0000; -- cmd12: dw &B0
+004A: 0000; -- cmd13: dw &B0
+004B: 0000; -- cmd14: dw &B0
+004C: 0000; -- cmd15: dw &B0
+[004D..07FF] : 0000; -- [empty memory]
 END;

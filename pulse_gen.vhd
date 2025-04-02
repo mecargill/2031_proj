@@ -39,7 +39,7 @@ begin
 	
 	begin
 		if resetn = '0' then
-			leds <= (others => '0');
+			leds <= "0000000000";
 		elsif rising_edge(clk12MHz) then
 			for i in 0 to 9 loop
 				if count < gamma_adj(to_integer(unsigned(brightnesses(i)))) then

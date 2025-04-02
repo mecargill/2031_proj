@@ -12,12 +12,12 @@ entity func_gen is
 	
 	port(	 
 
-		fn_bris           : in brightness_array;
+		fn_bris              : in brightness_array;
 		clk12MHz             : in std_logic;
 		funcs                : in func_array;
 		
 		
-		brightnesses         : out brightness_array
+		brightnesses         : buffer brightness_array
 		
 		 );
 end func_gen;

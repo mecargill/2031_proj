@@ -17,7 +17,6 @@ entity input_parser is
 		 cs2			 : in  std_logic;
 		 write_en    : in  std_logic;
 		 resetn      : in  std_logic;
-		 clk12MHz    : in  std_logic;
 		 io_data     : in  std_logic_vector(15 downto 0);
 		 
 
@@ -46,10 +45,11 @@ begin
 		begin
 		if resetn = '0' then
 			--ensure they stay off after resetn assertion (there is also async reset in pulse gen)
+			--the issue is clock stops on reset I believe, and these are not latched
 			fn_bris <= (others => "000000");
 			funcs <= (others => step);
 			
-		elsif rising_edge(cs0) and write_en = '1' then
+		elsif cs0 = '1' and write_en = '1' then
 		
 			input_bri <= to_integer(unsigned(io_data(13 downto 10)));
 			
