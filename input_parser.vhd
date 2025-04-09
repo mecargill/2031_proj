@@ -19,6 +19,7 @@ entity input_parser is
 		 resetn      : in  std_logic;
 		 io_data     : in  std_logic_vector(15 downto 0);
 		 
+		 
 
 		 fn_bris      : out brightness_array; --brightness param for the func gen to use
 		 funcs        : out func_array        --which animation/function to apply

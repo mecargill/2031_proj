@@ -32,7 +32,7 @@ architecture a of ledcontroller is
 			cs2			 : in  std_logic;
 			write_en     : in  std_logic;
 			resetn       : in  std_logic;
-			clk12MHz     : in  std_logic;
+			
 			io_data      : in  std_logic_vector(15 downto 0);
 
 			fn_bris   : out brightness_array; --gamma adjusted brightnesses (6 bit) based on input bri(4 bit)
@@ -77,7 +77,7 @@ begin
 			cs2 => cs2,
 			write_en => write_en,
 			resetn => resetn,
-			clk12MHz => clk12MHz,
+			
 			io_data => io_data,
 
 			

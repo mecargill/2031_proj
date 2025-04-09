@@ -5,83 +5,105 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 083C; -- load clr
+0000: 084C; -- load step1
 0001: 9820; -- out leds
-0002: 8037; -- call wait1sec
-0003: 083D; -- load cmd0
+0002: 8042; -- call wait10sec
+0003: 084D; -- load step2
 0004: 9820; -- out leds
-0005: 8037; -- call wait1sec 
-0006: 083E; -- load cmd1
+0005: 8042; -- call wait10sec
+0006: 084E; -- load step3
 0007: 9820; -- out leds
-0008: 8037; -- call wait1sec
-0009: 083F; -- load cmd2
+0008: 8042; -- call wait10sec
+0009: 084F; -- load gradient1
 000A: 9820; -- out leds
-000B: 8037; -- call wait1sec
-000C: 0840; -- load cmd3
-000D: 9820; -- out leds
-000E: 8037; -- call wait1sec
-000F: 0841; -- load cmd4
+000B: 0850; -- load gradient2
+000C: 9820; -- out leds
+000D: 0851; -- load gradient3
+000E: 9820; -- out leds
+000F: 0852; -- load gradient4
 0010: 9820; -- out leds
-0011: 8037; -- call wait1sec
-0012: 2800; -- jump 0
-0013: 0842; -- load cmd5
+0011: 0853; -- load gradient5
+0012: 9820; -- out leds
+0013: 0854; -- load gradient6
 0014: 9820; -- out leds
-0015: 8037; -- call wait1sec
-0016: 0843; -- load cmd6
-0017: 9820; -- out leds
-0018: 8037; -- call wait1sec
-0019: 0844; -- load cmd7
+0015: 0855; -- load gradient7
+0016: 9820; -- out leds
+0017: 0856; -- load gradient9
+0018: 9820; -- out leds
+0019: 0857; -- load gradient11
 001A: 9820; -- out leds
-001B: 8037; -- call wait1sec
-001C: 0845; -- load cmd8
-001D: 9820; -- out leds
-001E: 8037; -- call wait1sec
-001F: 0846; -- load cmd9
-0020: 9820; -- out leds
-0021: 8037; -- call wait1sec
-0022: 083C; -- load clr
-0023: 9820; -- out leds
-0024: 8037; -- call wait1sec
-0025: 0847; -- load cmd10
-0026: 9820; -- out leds
-0027: 8037; -- call wait1sec
-0028: 0848; -- load cmd11
-0029: 9820; -- out leds
-002A: 8037; -- call wait1sec
-002B: 0849; -- load cmd12
-002C: 9820; -- out leds
-002D: 8037; -- call wait1sec
-002E: 084A; -- load cmd13
-002F: 9820; -- out leds
-0030: 8037; -- call wait1sec
-0031: 084B; -- load cmd14
-0032: 9820; -- out leds
-0033: 8037; -- call wait1sec
-0034: 084C; -- load cmd15
-0035: 9820; -- out leds
-0036: 8037; -- call wait1sec
-0037: 9802; -- 	out timer
-0038: 9002; -- 		in timer
-0039: 6FD8; -- 		addi -40
-003A: 3038; -- 		jneg wait1
-003B: 8800; -- 	return
-003C: 03FF; -- clr:   dw &B0000001111111111
-003D: 3EAA; -- cmd0:  dw &B0011111010101010
-003E: C7FF; -- cmd1:  dw &B1100011111111111
-003F: FFFF; -- cmd2:  dw &B1111111111111111
-0040: 4AAA; -- cmd3:  dw &B0100101010101010
-0041: BFFF; -- cmd4:  dw &B1011111111111111
-0042: 0000; -- cmd5:  dw &B0
-0043: 0000; -- cmd6:  dw &B0
-0044: 0000; -- cmd7:  dw &B0
-0045: 0000; -- cmd8:  dw &B0
-0046: 0000; -- cmd9:  dw &B0
-0047: 0000; -- cmd10: dw &B0
-0048: 0000; -- cmd11: dw &B0
-0049: 0000; -- cmd12: dw &B0
-004A: 0000; -- cmd13: dw &B0
-004B: 0000; -- cmd14: dw &B0
-004C: 0000; -- cmd15: dw &B0
-[004D..07FF] : 0000; -- [empty memory]
+001B: 0858; -- load gradient15
+001C: 9820; -- out leds
+001D: 8042; -- call wait10sec
+001E: 0859; -- load reset
+001F: 9820; -- out leds
+0020: 085A; -- load flashMedium
+0021: 9820; -- out leds
+0022: 8042; -- call wait10sec
+0023: 085B; -- load flashHalfHigh
+0024: 9820; -- out leds
+0025: 8042; -- call wait10sec
+0026: 085C; -- load flashHalfLow
+0027: 9820; -- out leds
+0028: 8042; -- call wait10sec
+0029: 085D; -- load sin1
+002A: 9820; -- out leds
+002B: 8042; -- call wait10sec
+002C: 085E; -- load sin2
+002D: 9820; -- out leds
+002E: 8042; -- call wait10sec
+002F: 085F; -- load sin3
+0030: 9820; -- out leds
+0031: 8042; -- call wait10sec
+0032: 0860; -- load fade1
+0033: 9820; -- out leds
+0034: 8047; -- call wait2sec
+0035: 0861; -- load fade2
+0036: 9820; -- out leds
+0037: 8047; -- call wait2sec
+0038: 0862; -- load fade3
+0039: 9820; -- out leds
+003A: 8047; -- call wait2sec
+003B: 0863; -- load counter
+003C: 6801; -- addi 1
+003D: 1063; -- store counter
+003E: 0863; -- load counter
+003F: 6FFB; -- addi -5
+0040: 3032; -- jneg fadeLoop
+0041: 2800; -- jump 0
+0042: 9802; -- 	out timer
+0043: 9002; -- 		in timer
+0044: 6F9C; -- 		addi -100
+0045: 3043; -- 		jneg jump10
+0046: 8800; -- 	return
+0047: 9802; -- 	out timer
+0048: 9002; -- 		in timer
+0049: 6FEC; -- 		addi -20
+004A: 3048; -- 		jneg jump2
+004B: 8800; -- 	return
+004C: 3FFF; -- step1: DW &B0011111111111111 ; step to 15 (full) brightness all LEDs
+004D: 23FF; -- step2: DW &B0010001111111111 ; step to 8 (half) brightness all LEDs
+004E: 3C1F; -- step3: DW &B0011110000011111 ; step to 15 (full) brightness for right 5 LEDs
+004F: 0600; -- gradient1: DW  &B0000011000000000
+0050: 0900; -- gradient2: DW  &B0000100100000000
+0051: 0C80; -- gradient3: DW  &B0000110010000000
+0052: 1040; -- gradient4: DW  &B0001000001000000
+0053: 1420; -- gradient5: DW  &B0001010000100000
+0054: 1810; -- gradient6: DW  &B0001100000010000
+0055: 1C08; -- gradient7: DW  &B0001110000001000
+0056: 2404; -- gradient9: DW  &B0010010000000100
+0057: 2C02; -- gradient11: DW &B0010110000000010
+0058: 3C01; -- gradient15: DW &B0011110000000001
+0059: 3FFF; -- reset: DW &B0011111111111111 ; Reset all LEDs to target brightness 15
+005A: 5FFF; -- flashMedium: DW   &B0101111111111111 ; flash at brightness 7
+005B: 7FE0; -- flashHalfHigh: DW &B0111111111100000 ; flash at brightness 15
+005C: 441F; -- flashHalfLow: DW  &B0100010000011111 ; flash at brightness 1
+005D: BC1F; -- sin1: DW &b1011110000011111 ; oscillate right five LEDs between 0 and 15 brightness
+005E: 9FE0; -- sin2: DW &b1001111111100000 ;  oscillate left five LEDs between 0 and 7 brightness
+005F: 93FF; -- sin3: DW &b1001001111111111 ; oscillate all LEDs between 0 and 15 brightness
+0060: FFE0; -- FADE1: DW &b1111111111100000 ; (linearly go to full brightness left five LEDs)
+0061: D01F; -- FADE2: DW &b1101000000011111 ; (linearly go to ¼ brightness right five LEDs)
+0062: E3FF; -- FADE3: DW &b1110001111111111 ; (linearly go to ½  brightness all LEDs)
+0063: 0000; -- counter: dw 0
+[0064..07FF] : 0000; -- [empty memory]
 END;
-
